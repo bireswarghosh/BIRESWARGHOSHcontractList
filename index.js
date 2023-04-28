@@ -40,7 +40,7 @@ app.get('/', function(req, res){
         contact_list: contactList
     });
 })
-app.post('/add-new-contract', function(req, res){
+app.post('/create-contact', function(req, res){
     
     contactList.push(req.body);
     return res.redirect('/');

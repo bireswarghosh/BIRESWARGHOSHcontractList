@@ -1,56 +1,54 @@
-<head>
-    <title>
+    <head>
+        <title>
         <%= locals.title %>
-    </title>
+        </title>
 
     <script src="https://kit.fontawesome.com/ff79bff575.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/style.css">
-</head>
+    </head>
 
-<body>
+    <body>
     <!-- <h1>Hello, welcome to the EJS file, !</h1> -->
-    <h1 id="Contract">
-        <i class="fa-solid fa-link"></i>
-
+    <h1 id="page-hadeing">
+        <i class="fa-solid fa-address-book fa-beat-fade"></i>
         Contract List
     </h1>
 
-    <div >
-        <ol>
-            <% for(let i of contact_list){ %>
-                <li class="">
-                    <p>
-                        <%= i.name %>
-                    </p>
-                    <p>
-                        <%= i.phone %>
-                    </p>
-                    <div class="delate">
-                        <a href="/delete-contact/?phone=<%=i.phone  %>">
-
-                            <i class="fa-solid fa-trash-can fa-flip"></i>
-                        </a>
-
-
+        <div id="contract-list-container">
+            <ol>
+                   
+                <% for (let i of contact_list) { %> 
+                 
+                    <div  class="contact">
+                    <div class="details"> 
+                        <li>
+                            <p><%= i.name %></p>
+                            <p><%= i.phone %></p>
+                        </li>
                     </div>
 
+                    <div class="delete-button">
+                        <a href="/delete-contact/?phone=<%= i.phone %>">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </a>
+                    </div>
 
-                </li>
+                    </div>
                 <% } %>
         </ol>
-    </div>
+        </div>
 
-
-    <form action="/add-new-contract" method="post">
-        <input type="text" name="name" placeholder="name" required>
-        <input type="number" name="phone " placeholder="phone " required>
-        <button>add
-
-        </button>
-    </form>
+        <form action="/create-contact" method="POST">
+            <input type="text" name="name" placeholder="Enter name" required>
+            <input type="number" name="phone" placeholder="Enter phone" required>
+            <button type="submit">
+                add
+                <i class="fa-solid fa-user-plus fa-beat"></i>
+            </button>
+        </form>
 
 
     <script src="js/script.js"></script>
-</body>
+    </body>
 
 </html>
