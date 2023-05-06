@@ -1,8 +1,48 @@
 const express = require('express'); // Import the express module
-const app = express(); // Create an instance of express
-const port = 8000; // Set the port for the server
+
+const port = 5000; // Set the port for the server
 const path = require("path"); // Import the path module for working with file paths
 //const ejs = require('ejs'); // Import the ejs module for rendering EJS templates
+
+ 
+// // HEAR we add config folder
+
+
+const db = require('./config/mongoose');
+const Contact = require('./models/contact');
+
+ 
+const app = express(); // Create an instance of express
+
+ 
+
+
+// // add another approch is 
+// const mongoose = require('mongoose')
+
+// const url = 'mongodb://127.0.0.1:27017/AlienDB' 
+
+// const app = express()
+
+// mongoose.connect(url, {useNewUrlParser:true, useUnifiedTopology: true})
+// const con = mongoose.connection
+
+// con.on('open', () => {
+//     console.log('connected...')
+// })
+
+// // con.on('error',()=>{
+// //     console.log("Error in connecting to the database");
+// // })
+
+// app.use(express.json())
+
+// const alienRouter = require('./routes/aliens')
+// app.use('/aliens',alienRouter)
+
+// // 127.0.0.1:9000/aliens/about
+
+
 
 
 app.set('view engine', 'ejs');
@@ -32,21 +72,43 @@ app.get('/practice', function(req, res){
 });
 
 
-
+//Fetching Data from DB
 app.get('/', function(req, res){
 
-    return res.render('home',{
-        title: "Contact List",
-        contact_list: contactList
-    });
+
+    Contact.find({}, function(err, contacts){
+        if(err){
+            console.log("error in fetching contacts from db");
+            return;
+        }
+        return res.render('home',{
+            title: "Contact List",
+            contact_list: contacts
+        });
+
+    })
+  
 })
+// this is post method means where i push/save my data 
+//Populating the DB
 app.post('/create-contact', function(req, res){
     
-    contactList.push(req.body);
-    return res.redirect('/');
+    // contactList.push(req.body);
+    
+    //from schema
+    Contact.create({
+        name: req.body.name,
+        phone: req.body.phone
+    }, function(err, newContact){
+        if(err){console.log('Error in creating a contact!')
+            return;}
+            console.log('******', newContact);
+            return res.redirect('back');
+    })
+  
 
 });
-  
+
 
 // this is the common part
 app.listen(port, function(err){
@@ -57,16 +119,20 @@ app.listen(port, function(err){
 })
 
 // this is for delate  fun 
+//Deleting From DB
 
 app.get('/delete-contact/', function(req, res){
     console.log(req.query);
-    let phone = req.query.phone
+    let id = req.query.id
 
-    let contactindex = contactList.findIndex(contact => contact.phone == phone);
+    Contact.findOneAndDelete(id, function(err){
+        if(err){
+            console.log('error in deleting the object');
+            return;
+        }
+        return res.redirect('back');
+    })
 
-    if(contactindex != -1){
-        contactList.splice(contactindex, 1);
-    }
 
-    return res.redirect('back');
+   
 });
